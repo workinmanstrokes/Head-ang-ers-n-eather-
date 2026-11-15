@@ -98,7 +98,7 @@ menu on Android (Chrome) or iOS (Safari → Share → Add to Home Screen).
 
 ## Android (Capacitor)
 
-The app id in `capacitor.config.json` is the existing `com.soundboard.app`.
+The app id in `capacitor.config.json` is `com.diddlerrr.laughpad`. The launcher label is Laugh Pad. The in-app title is Laugh Pad: Meme Soundboard.
 The web app lives in `www/`.
 
 ```sh

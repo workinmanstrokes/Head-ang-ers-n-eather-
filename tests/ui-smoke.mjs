@@ -89,7 +89,7 @@ try {
   check(metrics.overflow === false, 'horizontal overflow');
   check(metrics.privacy === 'https://workinmanstrokes.github.io/test-builds/privacy/soundboard.html', 'privacy href');
   check(metrics.mic === 0, 'microphone was requested at launch');
-  check(!/Laugh Pad/i.test(metrics.text), 'unapproved name visible');
+  check(/Laugh Pad: Meme Soundboard/.test(metrics.text), 'display name missing');
 
   await page.screenshot({ path: OUT + '/01-board.png' });
 

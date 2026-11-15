@@ -17,7 +17,9 @@ test('Android target SDK is 35 and only the permissions the app uses are declare
   assert.match(manifest, /android.hardware.microphone" android:required="false"/);
   assert.doesNotMatch(manifest, /CAMERA|ACCESS_FINE_LOCATION|ACCESS_COARSE_LOCATION|READ_CONTACTS|READ_EXTERNAL_STORAGE|WRITE_EXTERNAL_STORAGE|POST_NOTIFICATIONS|READ_MEDIA/);
   assert.match(gradle, /keystore\.properties/);
-  assert.match(gradle, /applicationId "com\.soundboard\.app"/);
-  assert.match(strings, /Soundboard/);
-  assert.doesNotMatch(strings + manifest + gradle, /Laugh Pad|com\.diddlerrr\.laughpad/);
+  assert.match(gradle, /namespace = "com\.diddlerrr\.laughpad"/);
+  assert.match(gradle, /applicationId "com\.diddlerrr\.laughpad"/);
+  assert.match(strings, /<string name="app_name">Laugh Pad<\/string>/);
+  assert.match(read('android/app/src/main/java/com/diddlerrr/laughpad/MainActivity.java'), /package com\.diddlerrr\.laughpad;/);
+  assert.doesNotMatch(strings + manifest + gradle, /com\.soundboard\.app/);
 });
