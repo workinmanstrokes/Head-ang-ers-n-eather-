@@ -4,16 +4,21 @@ import test from 'node:test';
 
 const read = (path) => readFileSync(new URL('../' + path, import.meta.url), 'utf8');
 
-test('keeps the existing app id and does not use the unapproved name or package', () => {
+test('uses the approved Laugh Pad id and display name', () => {
   const config = read('capacitor.config.json');
   const html = read('www/index.html');
   const privacy = read('docs/privacy/soundboard.html');
-  const blob = config + html + privacy + read('www/app.js') + read('www/manifest.webmanifest');
-  assert.match(config, /"appId": "com\.soundboard\.app"/);
-  assert.match(config, /"appName": "Soundboard"/);
-  assert.doesNotMatch(blob, /Laugh Pad/i);
-  assert.doesNotMatch(blob, /com\.diddlerrr\.laughpad/);
-  assert.doesNotMatch(blob, /com\.diddlerrr\.soundboard/);
+  const manifest = read('www/manifest.webmanifest');
+  assert.match(config, /"appId": "com\.diddlerrr\.laughpad"/);
+  assert.match(config, /"appName": "Laugh Pad"/);
+  assert.match(html, /<title>Laugh Pad: Meme Soundboard<\/title>/);
+  assert.match(html, /<h1>Laugh Pad: Meme Soundboard<\/h1>/);
+  assert.match(manifest, /"name": "Laugh Pad: Meme Soundboard"/);
+  assert.match(manifest, /"short_name": "Laugh Pad"/);
+  assert.match(privacy, /Laugh Pad: Meme Soundboard/);
+  assert.match(privacy, /com\.diddlerrr\.laughpad/);
+  assert.match(html, /https:\/\/workinmanstrokes\.github\.io\/test-builds\/privacy\/soundboard\.html/);
+  assert.doesNotMatch(config + read('android/app/build.gradle'), /com\.soundboard\.app/);
 });
 
 test('privacy link is the GitHub Pages soundboard policy', () => {

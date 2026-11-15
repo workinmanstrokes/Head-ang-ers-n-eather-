@@ -1,6 +1,6 @@
 {
-  "appId": "com.soundboard.app",
-  "appName": "Soundboard",
+  "appId": "com.diddlerrr.laughpad",
+  "appName": "Laugh Pad",
   "webDir": "www",
   "server": {
     "androidScheme": "https",

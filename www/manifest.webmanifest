@@ -1,6 +1,6 @@
 {
-  "name": "Soundboard",
-  "short_name": "Soundboard",
+  "name": "Laugh Pad: Meme Soundboard",
+  "short_name": "Laugh Pad",
   "description": "Tap a pad, get the laugh.",
   "start_url": "index.html",
   "scope": "./",

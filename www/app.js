@@ -386,7 +386,7 @@ function openSheet(name) {
     section.hidden = section.id !== 'panel-' + name;
   }
   const section = $('panel-' + name);
-  $('sheetTitle').textContent = section ? section.dataset.title || 'Soundboard' : 'Soundboard';
+  $('sheetTitle').textContent = section ? section.dataset.title || 'Laugh Pad' : 'Laugh Pad';
   $('sheet').hidden = false;
   document.querySelectorAll('.dock-btn').forEach((btn) => {
     btn.setAttribute('aria-current', btn.dataset.open === name ? 'page' : 'false');
@@ -513,7 +513,7 @@ function micDeniedMessage(err) {
   const name = err && err.name;
   if (name === 'NotAllowedError' || name === 'PermissionDeniedError') {
     const where = isNative()
-      ? ' You can turn it on in Settings → Apps → Soundboard → Permissions.'
+      ? ' You can turn it on in Settings → Apps → Laugh Pad → Permissions.'
       : ' You can turn it on in the browser site settings.';
     return 'Microphone access is off, so nothing was recorded.' + where + ' The pads still play.';
   }

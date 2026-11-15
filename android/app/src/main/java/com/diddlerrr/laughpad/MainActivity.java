@@ -1,4 +1,4 @@
-package com.soundboard.app;
+package com.diddlerrr.laughpad;
 
 import com.getcapacitor.BridgeActivity;
 

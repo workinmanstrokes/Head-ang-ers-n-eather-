@@ -97,12 +97,15 @@ button { cursor: pointer; }
   color: var(--muted);
 }
 
+.brand { min-width: 0; flex: 1; }
+
 .top h1 {
   margin: 0;
-  font-size: 1.7rem;
+  max-width: 12.5rem;
+  font-size: 1.28rem;
   font-weight: 800;
   letter-spacing: -0.04em;
-  line-height: 1;
+  line-height: 1.05;
 }
 
 .vol {
@@ -564,7 +567,7 @@ button:disabled { opacity: 0.45; }
 
 @media (max-height: 700px) {
   .pad { min-height: 120px; }
-  .top h1 { font-size: 1.4rem; }
+  .top h1 { font-size: 1.15rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

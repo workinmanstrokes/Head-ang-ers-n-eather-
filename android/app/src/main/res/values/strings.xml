@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Soundboard</string>
-    <string name="title_activity_main">Soundboard</string>
-    <string name="package_name">com.soundboard.app</string>
-    <string name="custom_url_scheme">com.soundboard.app</string>
+    <string name="app_name">Laugh Pad</string>
+    <string name="title_activity_main">Laugh Pad</string>
+    <string name="package_name">com.diddlerrr.laughpad</string>
+    <string name="custom_url_scheme">com.diddlerrr.laughpad</string>
 </resources>
