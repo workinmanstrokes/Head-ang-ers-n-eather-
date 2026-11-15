@@ -1,13 +1,14 @@
 /* Soundboard service worker — cache the app shell and starter pack so the
  * board (and its 16 built-in sounds) works offline. Search clips and
  * recordings are fetched live and are not cached here. */
-const CACHE_NAME = 'soundboard-v1';
+const CACHE_NAME = 'soundboard-v2';
 const APP_SHELL = [
   './',
   'index.html',
   'styles.css',
   'app.js',
   'manifest.webmanifest',
+  'icon.svg',
   'data/starter-pack.json',
 ];
 
