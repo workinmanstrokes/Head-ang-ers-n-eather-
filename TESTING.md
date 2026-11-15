@@ -47,7 +47,8 @@ Count taps from the search box to the playable pad.
 | 5 | laser | | | ☐ |
 
 If any run takes more than ~30 s or more than ~6 taps, cut or shorten the
-slow step before calling this fixed.
+slow step before calling this fixed. Results that are not public domain,
+CC0, CC BY, or CC BY-SA are hidden and must not be saved.
 
 ## 4. Routing — one verified real use
 
@@ -81,7 +82,7 @@ Until one table is fully ticked, the app's speaker-only label stays.
 
 | Check | Result |
 | --- | --- |
-| Rename / delete / download a pad | ☐ |
+| Rename / delete / download a pad (More → Edit a pad, then tap a pad) | ☐ |
 | Macro (max 8 steps) plays its pads in order; delete removes it | ☐ |
 | Saved pads + recordings survive reload | ☐ |
 | Reset restores the 16-sound starter pack | ☐ |

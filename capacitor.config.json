@@ -1,1 +1,14 @@
-{"appId":"com.soundboard.app","appName":"Soundboard","plugins":{},"server":{"androidScheme":"https"},"webDir":"."}
+{
+  "appId": "com.soundboard.app",
+  "appName": "Soundboard",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https",
+    "allowNavigation": []
+  },
+  "android": {
+    "adjustMarginsForEdgeToEdge": "force",
+    "backgroundColor": "#100e16"
+  },
+  "plugins": {}
+}

@@ -1,0 +1,22 @@
+{
+  "name": "soundboard",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Soundboard — tap a pad, get the laugh. Web app packaged for Android with Capacitor.",
+  "scripts": {
+    "generate:sounds": "node scripts/generate-starter-pack.mjs",
+    "generate:icons": "node scripts/render-icon.mjs",
+    "start": "python3 -m http.server 8080 -d www",
+    "test": "node --test tests/*.test.js",
+    "test:ui": "node tests/ui-smoke.mjs"
+  },
+  "dependencies": {
+    "@capacitor/android": "8.6.2",
+    "@capacitor/core": "8.6.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.6.2",
+    "puppeteer-core": "24.15.0"
+  }
+}

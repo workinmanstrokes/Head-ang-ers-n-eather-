@@ -2,11 +2,14 @@
 
 > **Tap a pad, get the laugh in under ten seconds.**
 
-A web soundboard app: big coloured play pads, a mic recorder to capture your
-own sounds, live Internet Archive sound-effect search with preview and
-one-tap save to the board, pad rename/delete/download, and a macro builder.
-A downloadable single-page version stores sounds on-device. Installable as a
-PWA, with an Android APK build via Capacitor.
+A web soundboard: big coloured pads, a mic recorder, Internet Archive search
+limited to clearly licensed short clips, pad editing, and chains of up to
+eight pads. Sounds you record or save stay on the device. Installable as a
+PWA and wrapped for Android with Capacitor.
+
+The bundled starter pack is original synthesis (`scripts/generate-starter-pack.mjs`).
+Sources and licenses are in `LICENSES.md`. The privacy policy is
+`docs/privacy/soundboard.html`.
 
 ## Tester review fixes (score 4.5/10, grade D — highest priority first)
 
@@ -83,29 +86,38 @@ without rewriting the audio code.
 
 ## Run it
 
-Serve the folder over HTTP (service workers and mic access need a secure
+Serve `www` over HTTP (service workers and mic access need a secure
 context) and open `index.html`:
 
 ```sh
-python3 -m http.server 8080
+python3 -m http.server 8080 -d www
 ```
 
 Or open the PWA from any static host. Add to home screen from the browser
 menu on Android (Chrome) or iOS (Safari → Share → Add to Home Screen).
 
-## Android APK (Capacitor)
+## Android (Capacitor)
+
+The app id in `capacitor.config.json` is the existing `com.soundboard.app`.
+The web app lives in `www/`.
 
 ```sh
-npm install @capacitor/core @capacitor/cli
-npx cap init Soundboard com.soundboard.app --web-dir=.
-npx cap add android
-npx cap sync
-npx cap open android   # build the APK in Android Studio
+npm install
+npx cap sync android
+cd android && ./gradlew assembleDebug
 ```
 
-`capacitor.config.json` in this repo holds the app ID, name, and web dir.
-No APK is checked into the repo yet — building one needs Android Studio;
-until then the verified single-file/PWA path is the distribution path.
+### Release signing, on your PC only
+
+Copy `keystore.properties.example` to `keystore.properties` (gitignored) and
+point `storeFile` at a keystore that stays on your machine. Do not commit
+the keystore or the passwords. This repo does not sign a release build and
+does not upload anything to Play. A debug APK is produced with
+`assembleDebug` only.
+
+Target SDK is 35. The activity is portrait. Declared permissions are the
+microphone (recording, requested only when you tap Record) and internet
+(Archive search and opening the privacy page).
 
 ## Milestones
 
