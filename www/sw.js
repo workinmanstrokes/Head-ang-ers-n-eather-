@@ -1,10 +1,13 @@
-/* Soundboard shell. Audio files are cache-first so taps stay local. */
-const CACHE_NAME = 'soundboard-v3';
+/* Laugh Pad shell. Audio files are cache-first so taps stay local. */
+const CACHE_NAME = 'laughpad-v4';
 const APP_SHELL = [
   './',
   'index.html',
   'styles.css',
   'app.js',
+  'telemetry.js',
+  'telemetry-config.js',
+  'lib/telemetry.js',
   'manifest.webmanifest',
   'icon.svg',
   'icons/icon-192.png',

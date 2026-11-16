@@ -90,9 +90,9 @@ button { cursor: pointer; }
 
 .eyebrow {
   margin: 0;
-  font-size: 0.68rem;
+  font-size: 0.62rem;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -415,6 +415,28 @@ input[type="range"]::-webkit-slider-thumb {
   color: var(--muted);
   font-size: 0.92rem;
 }
+
+.stats-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin: 0 0 8px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #120f1a;
+}
+
+.stats-row input {
+  width: 28px;
+  height: 28px;
+  margin-top: 2px;
+  flex: none;
+  accent-color: #efe7da;
+}
+
+.stats-row strong { display: block; margin-bottom: 4px; }
+.stats-row .hint { display: block; margin: 0; }
 
 .stack-row, .more-actions {
   display: flex;

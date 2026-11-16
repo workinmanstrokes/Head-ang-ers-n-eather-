@@ -1,11 +1,11 @@
-# Soundboard
+# Laugh Pad: Meme Soundboard
 
 > **Tap a pad, get the laugh in under ten seconds.**
 
-A web soundboard: big coloured pads, a mic recorder, Internet Archive search
+Laugh Pad: Meme Soundboard is a web soundboard: big coloured pads, a mic recorder, Internet Archive search
 limited to clearly licensed short clips, pad editing, and chains of up to
 eight pads. Sounds you record or save stay on the device. Installable as a
-PWA and wrapped for Android with Capacitor.
+PWA and wrapped for Android with Capacitor. The developer is DowntownDiddlerrr.
 
 The bundled starter pack is original synthesis (`scripts/generate-starter-pack.mjs`).
 Sources and licenses are in `LICENSES.md`. The privacy policy is
@@ -72,7 +72,7 @@ Sources and licenses are in `LICENSES.md`. The privacy policy is
 
 ## Screens
 
-Soundboard grid (main board) · Search results with preview and save ·
+Pad grid (main board) · Search results with preview and save ·
 Recorder sheet · Pad editor (rename / delete / download) · Macro builder ·
 Routing guide (OBS / Discord) · Install & settings
 
@@ -107,13 +107,22 @@ npx cap sync android
 cd android && ./gradlew assembleDebug
 ```
 
-### Release signing, on your PC only
+### Release signing
 
 Copy `keystore.properties.example` to `keystore.properties` (gitignored) and
 point `storeFile` at a keystore that stays on your machine. Do not commit
-the keystore or the passwords. This repo does not sign a release build and
-does not upload anything to Play. A debug APK is produced with
-`assembleDebug` only.
+the keystore or the passwords.
+
+GitHub Actions (`.github/workflows/build-apk.yml`) builds a debug APK on
+every push and pull request, keeps it as an artifact for 2 days, and
+publishes it as the rolling prerelease asset `LaughPad-debug.apk`. The
+release AAB job signs `bundleRelease` from these Actions secrets:
+`ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`,
+`ANDROID_KEY_PASSWORD`. If all four are absent, that job skips and stays
+green. Optional public client keys `SENTRY_DSN`, `POSTHOG_KEY`, and
+`POSTHOG_HOST` are baked at build time. Blank keys send no crash reports
+and no play stats. `POSTHOG_KEY` is the key for the shared PostHog project
+`workinmanstrokesinc`.
 
 Target SDK is 35. The activity is portrait. Declared permissions are the
 microphone (recording, requested only when you tap Record) and internet

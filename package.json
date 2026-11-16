@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Soundboard — tap a pad, get the laugh. Web app packaged for Android with Capacitor.",
+  "description": "Laugh Pad: Meme Soundboard — tap a pad, get the laugh. Web app packaged for Android with Capacitor.",
   "scripts": {
     "generate:sounds": "node scripts/generate-starter-pack.mjs",
     "generate:icons": "node scripts/render-icon.mjs",

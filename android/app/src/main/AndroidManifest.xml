@@ -36,7 +36,8 @@
         </provider>
     </application>
 
-    <!-- Internet: Archive search. Microphone: only after the user taps Record.
+    <!-- Internet: Archive search, the privacy page, and optional crash reports
+         and play stats when that switch is on. Microphone: only after the user taps Record.
          MODIFY_AUDIO_SETTINGS is the normal permission Capacitor's WebView
          requests together with the microphone so capture can start. -->
     <uses-permission android:name="android.permission.INTERNET" />

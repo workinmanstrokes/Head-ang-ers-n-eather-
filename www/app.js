@@ -4,6 +4,7 @@ import { INK_CREAM, inkFor } from './lib/color.js';
 import { createEngine } from './lib/engine.js';
 import { classifyLicense, formatAttribution } from './lib/licenses.js';
 import { padMark } from './lib/marks.js';
+import { bootTelemetry, currentStats, setStatsEnabled, track } from './telemetry.js';
 
 const PAD_KEY = 'soundboard.pads.v2';
 const LEGACY_PAD_KEY = 'soundboard.pads.v1';
@@ -174,8 +175,12 @@ async function ensureBuffer(pad) {
   return job;
 }
 
-function playPad(pad) {
+function playPad(pad, opts = {}) {
   if (!pad) return;
+  if (!opts.quiet) {
+    const kind = pad.kind === 'recording' ? 'recording' : pad.kind === 'starter' ? 'starter' : 'saved';
+    track('pad_played', { kind });
+  }
   engine.unlock();
   const token = playToken;
   const key = bufferKey(pad);
@@ -344,6 +349,7 @@ function addToChain(id) {
 
 function playMacro(macro) {
   stopAll();
+  track('chain_played', { kind: 'chain' });
   engine.unlock();
   let when = engine.ctx.currentTime + 0.01;
   let scheduled = 0;
@@ -352,7 +358,7 @@ function playMacro(macro) {
     if (!pad) continue;
     const buf = buffers.get(bufferKey(pad));
     if (!buf) {
-      playPad(pad);
+      playPad(pad, { quiet: true });
       when += Math.max(0.25, pad.duration || 0.4);
       scheduled += 1;
       continue;
@@ -985,6 +991,34 @@ function wire() {
   if (!recorderSupported()) {
     $('recBtn').disabled = true;
     $('recStatus').textContent = 'This browser cannot record from the microphone. The pads still play.';
+  }
+
+  const statsBox = $('statsToggle');
+  if (statsBox) {
+    const paintStats = () => {
+      const plan = currentStats();
+      const note = $('statsState');
+      statsBox.checked = plan.reason !== 'off' && plan.reason !== 'dnt';
+      statsBox.disabled = plan.reason === 'dnt';
+      if (!note) return;
+      if (plan.reason === 'dnt') note.textContent = 'This device asked not to be tracked. Nothing is sent.';
+      else if (plan.reason === 'off') note.textContent = 'Off. Nothing is sent. This choice stays on this device.';
+      else if (plan.reason === 'no-keys') note.textContent = 'On, but this build has no crash or stats keys, so nothing is sent.';
+      else if (plan.reason === 'local') note.textContent = 'This page is on a local server, so nothing is sent.';
+      else {
+        const parts = [];
+        if (plan.sentry) parts.push('crash reports');
+        if (plan.posthog) parts.push('play stats');
+        note.textContent = 'On. Sending ' + parts.join(' and ') + '. No recordings and no names.';
+      }
+    };
+    paintStats();
+    statsBox.addEventListener('change', () => {
+      setStatsEnabled(statsBox.checked);
+      paintStats();
+    });
+    bootTelemetry();
+    paintStats();
   }
 }
 

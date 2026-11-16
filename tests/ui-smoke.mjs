@@ -48,7 +48,11 @@ try {
   });
   const page = await browser.newPage();
   const errors = [];
+  const leaks = [];
   page.on('pageerror', (err) => errors.push(String(err)));
+  page.on('request', (req) => {
+    if (/sentry\.io|posthog\.com/.test(req.url())) leaks.push(req.url());
+  });
   await page.setViewport({ width: 360, height: 800, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
   await page.evaluateOnNewDocument(() => {
     window.__micCalls = 0;
@@ -146,6 +150,21 @@ try {
   await page.click('[data-open="more"]');
   await page.waitForSelector('#panel-more:not([hidden])');
   await page.screenshot({ path: OUT + '/08-more.png' });
+  const statsOn = await page.$eval('#statsToggle', (el) => el.checked);
+  const statsText = await page.$eval('#statsState', (el) => el.textContent);
+  check(statsOn === true, 'stats switch should start on');
+  check(/nothing is sent/i.test(statsText), 'blank keys should send nothing: ' + statsText);
+  await page.click('#statsToggle');
+  await page.waitForFunction(() => localStorage.getItem('laughpad.stats.v1') === 'off');
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await page.waitForFunction(() => (document.getElementById('status') || {}).textContent.includes('ready'), { timeout: 8000 });
+  await page.click('[data-open="more"]');
+  await page.waitForSelector('#statsToggle');
+  const statsOff = await page.$eval('#statsToggle', (el) => el.checked);
+  const offText = await page.$eval('#statsState', (el) => el.textContent);
+  check(statsOff === false, 'stats switch did not stay off');
+  check(/Off/.test(offText), 'off copy: ' + offText);
+  check(leaks.length === 0, 'telemetry network calls: ' + leaks.join(' '));
   await page.click('#editArm');
   await page.click('.pad');
   await page.waitForSelector('#panel-editor:not([hidden])');
