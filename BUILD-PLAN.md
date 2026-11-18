@@ -1,8 +1,8 @@
-# Soundboard — build plan (update from the 4.5/10 tester review)
+# Laugh Pad: Meme Soundboard — build plan (update from the 4.5/10 tester review)
 
 ## Project
 
-- **Name:** Soundboard
+- **Name:** Laugh Pad: Meme Soundboard
 - **Kind:** app (update to an existing web Soundboard)
 - **Platform:** Web (PWA, with Android APK)
 - **Category:** Audio Entertainment

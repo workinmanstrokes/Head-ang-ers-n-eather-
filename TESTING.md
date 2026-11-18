@@ -1,4 +1,4 @@
-# Soundboard — device test protocols
+# Laugh Pad: Meme Soundboard — device test protocols
 
 Nothing in this file has been run yet. Every result table is blank on
 purpose: fill it in from a real phone/browser, never from a guess. These

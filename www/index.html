@@ -17,7 +17,7 @@
 <div class="app">
   <header class="top">
     <div class="brand">
-      <p class="eyebrow">Diddlerrr</p>
+      <p class="eyebrow">DowntownDiddlerrr</p>
       <h1>Laugh Pad: Meme Soundboard</h1>
     </div>
     <label class="vol">
@@ -38,7 +38,7 @@
 
   <footer class="dock">
     <button id="stopAll" class="stop" type="button">Stop all</button>
-    <nav class="dock-nav" aria-label="Soundboard tools">
+    <nav class="dock-nav" aria-label="Laugh Pad tools">
       <button type="button" class="dock-btn" data-open="search">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M16 16l4 4"/></svg>
         <span>Find</span>
@@ -105,6 +105,14 @@
     </section>
 
     <section id="panel-more" data-title="More" hidden>
+      <label class="stats-row">
+        <input id="statsToggle" type="checkbox" checked>
+        <span>
+          <strong>Crash reports and play stats</strong>
+          <span class="hint">Anonymous crash reports and play counts only. No recordings, no names, and no account. Saved on this device.</span>
+        </span>
+      </label>
+      <p id="statsState" class="hint" role="status"></p>
       <div class="more-actions">
         <button id="editArm" type="button">Edit a pad</button>
         <button id="resetAsk" type="button" class="danger">Reset board</button>
@@ -112,8 +120,8 @@
       </div>
       <p class="hint">Keys 1–0 and Q–Y play the first 16 pads. Esc stops everything.</p>
       <p class="hint">Sound plays through this device's speaker.</p>
-      <p class="hint">Starter sounds are original synthesized effects. Recordings and saved clips stay on this device. No ads. No analytics. No account.</p>
-      <p class="hint">Made by Diddlerrr. Questions: <a href="mailto:mscofield1588@gmail.com">mscofield1588@gmail.com</a></p>
+      <p class="hint">Starter sounds are original synthesized effects. Recordings and saved clips stay on this device. No ads. No account.</p>
+      <p class="hint">Made by DowntownDiddlerrr. Questions: <a href="mailto:mscofield1588@gmail.com">mscofield1588@gmail.com</a></p>
       <div id="sourceList" class="sources"></div>
       <button id="installBtn" type="button" hidden>Install app</button>
     </section>

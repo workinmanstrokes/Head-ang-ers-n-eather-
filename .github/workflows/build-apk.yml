@@ -1,0 +1,187 @@
+name: Build Android APK
+
+# Debug APK on pull requests, pushes to main, and manual runs.
+# Matches the org artifact-retention pattern (final-cast, brainrot-aura-rush):
+# the APK is an Actions artifact for 2 days, and the same file is published as
+# the rolling prerelease asset LaughPad-debug.apk (replaced on each build).
+# Uses the built-in GITHUB_TOKEN only for that upload.
+#
+# release-aab signs bundleRelease from Actions secrets and skips cleanly when
+# all four are absent. A partial set fails the job so a half-configured
+# keystore is not silent.
+#   ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD
+# Optional public client keys, baked into www/telemetry-config.js. Blank leaves that reporter off:
+#   SENTRY_DSN, POSTHOG_KEY, POSTHOG_HOST
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  debug-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '21', cache: gradle }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - name: Install
+        run: npm ci
+      - name: Unit tests
+        run: npm test
+      - name: Bake telemetry config
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          POSTHOG_KEY: ${{ secrets.POSTHOG_KEY }}
+          POSTHOG_HOST: ${{ secrets.POSTHOG_HOST }}
+        run: node scripts/bake-telemetry.mjs
+      - name: Sync Capacitor
+        run: npx cap sync android
+      - name: Build debug APK
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon --stacktrace
+      - name: Stage debug APK
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk "$RUNNER_TEMP/LaughPad-debug.apk"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LaughPad-debug
+          path: ${{ runner.temp }}/LaughPad-debug.apk
+          retention-days: 2
+          if-no-files-found: error
+      - name: Publish APK to rolling prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          BRANCH: ${{ github.head_ref || github.ref_name }}
+          SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="$(printf '%s' "$BRANCH" | tr -c 'A-Za-z0-9._-' '-')-latest"
+          notes="Latest build of $BRANCH from $SHA (run $GITHUB_RUN_ID)."
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release edit "$TAG" --notes "$notes" --prerelease
+          else
+            gh release create "$TAG" --target "$SHA" --title "$BRANCH (latest build)" --notes "$notes" --prerelease
+          fi
+          gh release upload "$TAG" "$RUNNER_TEMP/LaughPad-debug.apk" --clobber
+
+  release-aab:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Detect signing secrets
+        id: signing
+        env:
+          KS: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KSP: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KA: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KP: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          missing=()
+          [ -n "$KS" ] || missing+=(ANDROID_KEYSTORE_BASE64)
+          [ -n "$KSP" ] || missing+=(ANDROID_KEYSTORE_PASSWORD)
+          [ -n "$KA" ] || missing+=(ANDROID_KEY_ALIAS)
+          [ -n "$KP" ] || missing+=(ANDROID_KEY_PASSWORD)
+          if [ "${#missing[@]}" -eq 4 ]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Signing secrets are absent. Skipping the signed release AAB."
+          elif [ "${#missing[@]}" -gt 0 ]; then
+            echo "::error::Signing secrets are incomplete. Missing: ${missing[*]}"
+            exit 1
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: success() && steps.signing.outputs.ready == 'true'
+      - uses: actions/setup-java@v4
+        if: success() && steps.signing.outputs.ready == 'true'
+        with: { distribution: temurin, java-version: '21', cache: gradle }
+      - uses: actions/setup-node@v4
+        if: success() && steps.signing.outputs.ready == 'true'
+        with: { node-version: 22, cache: npm }
+      - name: Install, bake telemetry, sync
+        if: success() && steps.signing.outputs.ready == 'true'
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          POSTHOG_KEY: ${{ secrets.POSTHOG_KEY }}
+          POSTHOG_HOST: ${{ secrets.POSTHOG_HOST }}
+        run: |
+          npm ci
+          node scripts/bake-telemetry.mjs
+          npx cap sync android
+      - name: Write keystore.properties
+        if: success() && steps.signing.outputs.ready == 'true'
+        env:
+          KS_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASS: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os, base64, pathlib
+          raw = "".join(os.environ["KS_B64"].split())
+          path = pathlib.Path(os.environ["RUNNER_TEMP"]) / "upload.keystore"
+          path.write_bytes(base64.b64decode(raw, validate=True))
+          def line(key, val):
+              if "\n" in val or "\r" in val:
+                  raise SystemExit(key + " contains a newline")
+              return key + "=" + val.replace("\\", "\\\\")
+          text = "\n".join([
+              line("storeFile", str(path)),
+              line("storePassword", os.environ["KS_PASS"]),
+              line("keyAlias", os.environ["KEY_ALIAS"]),
+              line("keyPassword", os.environ["KEY_PASS"]),
+          ]) + "\n"
+          pathlib.Path("keystore.properties").write_text(text)
+          print("keystore.properties written")
+          PY
+      - name: Build signed release bundle
+        if: success() && steps.signing.outputs.ready == 'true'
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew bundleRelease --no-daemon --stacktrace
+      - name: Verify signature
+        if: success() && steps.signing.outputs.ready == 'true'
+        run: |
+          set -euo pipefail
+          AAB=android/app/build/outputs/bundle/release/app-release.aab
+          test -s "$AAB"
+          out="$(jarsigner -verify "$AAB" 2>&1)" || true
+          printf '%s\n' "$out" | head -n 20
+          case "$out" in
+            *"jar verified"*) ;;
+            *) echo "::error::jarsigner did not verify the release AAB."; exit 1 ;;
+          esac
+          if keytool -printcert -jarfile "$AAB" | grep -q "CN=Android Debug"; then
+            echo "::error::Release AAB is debug-signed."
+            exit 1
+          fi
+          cp "$AAB" "$RUNNER_TEMP/LaughPad-release.aab"
+      - name: Remove signing material
+        if: always() && steps.signing.outputs.ready == 'true'
+        run: rm -f keystore.properties "$RUNNER_TEMP/upload.keystore"
+      - uses: actions/upload-artifact@v4
+        if: success() && steps.signing.outputs.ready == 'true'
+        with:
+          name: LaughPad-release
+          path: ${{ runner.temp }}/LaughPad-release.aab
+          retention-days: 2
+          if-no-files-found: error

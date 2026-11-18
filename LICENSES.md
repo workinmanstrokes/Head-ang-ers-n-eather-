@@ -1,6 +1,6 @@
 # Licenses and sound sources
 
-Soundboard ships only audio we made, audio the person records on their own device, or audio saved from the Internet Archive after the app has checked a clear license. Anything with unclear rights is not bundled and is not offered for save.
+Laugh Pad ships only audio we made, audio the person records on their own device, or audio saved from the Internet Archive after the app has checked a clear license. Anything with unclear rights is not bundled and is not offered for save.
 
 ## App code
 
