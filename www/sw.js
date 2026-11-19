@@ -1,5 +1,7 @@
 /* Laugh Pad shell. Audio files are cache-first so taps stay local. */
 const CACHE_NAME = 'laughpad-v4';
+// Every game on the arcade site shares one cache storage, so only clear this game's own old caches (this app used to be 'soundboard-').
+const OWN = [CACHE_NAME.slice(0, CACHE_NAME.lastIndexOf('-') + 1), 'soundboard-'];
 const APP_SHELL = [
   './',
   'index.html',
@@ -43,13 +45,13 @@ const APP_SHELL = [
 ];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL.map((u) => new Request(u, { cache: 'reload' })))).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))))
+      .then((keys) => Promise.all(keys.filter((k) => OWN.some((p) => k.startsWith(p)) && k !== CACHE_NAME).map((k) => caches.delete(k))))
       .then(() => self.clients.claim()),
   );
 });
