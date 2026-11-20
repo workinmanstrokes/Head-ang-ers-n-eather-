@@ -30,6 +30,7 @@ test('starter pack is 16 original wavs with safe levels', () => {
     for (let i = 44; i < wav.length; i += 2) {
       peak = Math.max(peak, Math.abs(wav.readInt16LE(i)) / 32768);
     }
-    assert.ok(peak > 0.2 && peak <= 0.7, sound.id + ' peak ' + peak);
+    // Ceiling is just above -3 dBFS (0.708), the level the recorded pack is normalized to.
+    assert.ok(peak > 0.2 && peak <= 0.71, sound.id + ' peak ' + peak);
   }
 });
