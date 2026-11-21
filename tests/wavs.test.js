@@ -5,10 +5,10 @@ import { contrast, inkFor } from '../www/lib/color.js';
 
 const root = new URL('../', import.meta.url);
 
-test('starter pack is 16 original wavs with safe levels', () => {
+test('starter pack is 32 recorded wavs with safe levels', () => {
   const pack = JSON.parse(readFileSync(new URL('www/data/starter-pack.json', root), 'utf8'));
-  assert.equal(pack.sounds.length, 16);
-  assert.match(pack.license, /Original works/);
+  assert.equal(pack.sounds.length, 32);
+  assert.match(pack.license, /real recordings/);
   const ids = new Set();
   for (const sound of pack.sounds) {
     assert.ok(!ids.has(sound.id));

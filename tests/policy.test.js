@@ -78,7 +78,7 @@ test('voice steal frees one slot at the cap and takes the oldest first', () => {
 });
 
 test('pad ink stays at least AA against the pad colour', () => {
-  for (const hex of ['#c81f36', '#ef7d12', '#5346e4', '#0d7a4d', '#1f5fd4', '#0c7380', '#c21868', '#d4652a', '#c4920a', '#7a4b38', '#d7a30e', '#b42338', '#c99712', '#4e7a22', '#8e2eb0', '#334856']) {
+  for (const hex of ['#c81f36', '#ef7d12', '#5346e4', '#0d7a4d', '#1f5fd4', '#0c7380', '#c21868', '#d4652a', '#c4920a', '#7a4b38', '#d7a30e', '#b42338', '#c99712', '#4e7a22', '#8e2eb0', '#334856', '#1a1a2e', '#2e9e5b', '#e8b93c', '#d21f3c', '#ff6b1a', '#6d4c41', '#f57c00', '#5c6bc0', '#4dd0e1', '#546e7a', '#9ccc65', '#ff4081', '#ffb300', '#795548', '#7e57c2', '#212121']) {
     assert.ok(contrast(hex, inkFor(hex)) >= 4.5, hex);
   }
 });

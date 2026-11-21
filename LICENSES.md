@@ -8,9 +8,48 @@ The application source is under the MIT license in `LICENSE`. Copyright (c) 2026
 
 ## Starter pack (bundled)
 
-The 16 starter sounds in `www/audio/` are original synthesis. `scripts/generate-starter-pack.mjs` generates the WAV files. No third-party samples, recordings, or sound libraries are used. They are part of this app and covered by the MIT license above.
+The 32 starter sounds in `www/audio/` are real recordings from Wikimedia Commons and SoundBible, converted to WAV 44.1 kHz / 16-bit / mono, silence-trimmed and peak-normalized to about -3 dBFS (first 16 to -3.0 dBFS, second 16 to -3.1 dBFS). The first 16 replaced synthesized placeholders on 2026-11-19; the second 16 were added on 2026-11-20. The per-sound source and license are also in `www/data/starter-pack.json`, and the app shows them on each pad's detail view.
 
-Labels such as “airhorn” and “rimshot” describe the effect. They are not recordings of a commercial sample pack. The coin chime is an original two-note figure (D6 then A6), not a quotation of a game sound.
+| Sound | Source | License |
+|---|---|---|
+| airhorn | SoundBible — "Air Horn" by Mike Koenig | CC BY 3.0 |
+| applause | Wikimedia Commons — "277021 sandermotions applause-2.wav" | CC0 1.0 |
+| boing | Wikimedia Commons — "Boing raw.ogg" | CC BY 4.0 |
+| buzzer | SoundBible — "Buzzer" by cognito | CC Sampling Plus 1.0 |
+| coin | Wikimedia Commons — "Coin dropped on wooden floor.ogg" | Public domain |
+| crickets | Wikimedia Commons — "Cricket Gryllus bimaculatus Chirps.oga" | CC BY-SA 4.0 |
+| ding | SoundBible — "Temple Bell" by Mike Koenig | CC BY 3.0 |
+| drum-roll | Wikimedia Commons — "Drum Roll Intro.ogg" | CC0 1.0 |
+| fart | Wikimedia Commons — "Human fart.wav" | CC BY-SA 4.0 |
+| laser | SoundBible — "Laser" by Mike Koenig | CC BY 3.0 |
+| moo | SoundBible — "Cow Moo" by Mike Koenig | CC BY 3.0 |
+| quack | Wikimedia Commons — "Pekin duck & mallard.ogg" | CC BY-SA 4.0 |
+| rimshot | SoundBible — "Joke Sting" | Personal Use Only (SoundBible) |
+| sad-trombone | SoundBible — "Sad Trombone" by Joe Lamb | CC BY 3.0 |
+| tada | SoundBible — "Ta Da" by Mike Koenig | CC BY 3.0 |
+| whistle | SoundBible — "Whistling" by Mike Koenig | CC BY 3.0 |
+| vine-boom | SoundBible — "Explosion Ultra Bass" by Mark DiAngelo | CC BY 3.0 |
+| cash-register | SoundBible — "Cha Ching Register" by Muska666 | CC BY 3.0 |
+| doorbell | Wikimedia Commons — "Sound Effect - Door Bell" by Amada44 | CC0 1.0 |
+| siren | Wikimedia Commons — "Air Raid Siren" by MrSpode42 | CC BY-SA 4.0 |
+| explosion | Wikimedia Commons — "Explosion-LS100155" by Fg2 | Public domain |
+| goat | SoundBible — "Bleat" by Mike Koenig | CC BY 3.0 |
+| rooster | Wikimedia Commons — "Young rooster crowing" by Filo gèn' | CC BY-SA 4.0 |
+| wolf-howl | Wikimedia Commons — "Wolf howls" | Public domain |
+| glass-break | Wikimedia Commons — "Glass breaking (Gravity Sound)" by Gravity Sound | CC BY 4.0 |
+| thunder | SoundBible — "Thunder" by Mike Koenig | CC BY 3.0 |
+| burp | Wikimedia Commons — "Burp" by Ezwa | Public domain |
+| party-horn | SoundBible — "Party Horn" by Mike Koenig | CC BY 3.0 |
+| alarm-clock | SoundBible — "Annoying Alarm Clock" by UncleKornicob | Public Domain |
+| dog-bark | SoundBible — "Small Dog Barking" by Daniel Simion | CC BY 3.0 |
+| sneeze | SoundBible — "Sneeze" by Mike Koenig | CC BY 3.0 |
+| dramatic-sting | SoundBible — "Dun Dun Dun" by Delsym | CC BY 3.0 |
+
+Two sounds carry tighter terms than the rest: buzzer (CC Sampling Plus 1.0, noncommercial) and rimshot (SoundBible Personal Use Only). Freer-licensed alternates exist on Wikimedia Commons and can be swapped in later if wanted: "Buzzer.wav" (CC0) and "Rimshot loop 108bpm.ogg" (CC BY-SA 4.0).
+
+Labels such as "airhorn" and "rimshot" describe the effect. The coin chime is a real coin dropped on a wooden floor, not a quotation of a game sound. "Vine Boom" is a deep bass explosion recording, used as the meme's boom sound.
+
+`scripts/generate-starter-pack.mjs` generated the original synthesized WAV files. Those files have been replaced by the recordings above; the script is kept for reference and is not used for the bundled sounds anymore.
 
 ## Icons and interface
 
@@ -22,7 +61,7 @@ The interface uses Outfit, copyright 2021 The Outfit Project Authors (https://gi
 
 ## Microphone recordings
 
-A recording made in the app belongs to the person who recorded it. It is stored only in the app’s private on-device storage (IndexedDB). The app does not upload it. See `docs/privacy/soundboard.html`.
+A recording made in the app belongs to the person who recorded it. It is stored only in the app's private on-device storage (IndexedDB). The app does not upload it. See `docs/privacy/soundboard.html`.
 
 ## Internet Archive search (not bundled)
 
@@ -35,7 +74,7 @@ Allowed, and only when `licenseurl` or the Archive rights field says so:
 - Legacy public-domain tag (`creativecommons.org/licenses/publicdomain`)
 - CC BY (`creativecommons.org/licenses/by/`, and not BY-NC or BY-ND)
 - CC BY-SA (`creativecommons.org/licenses/by-sa/`)
-- Rights text exactly “public domain” or “no known copyright restrictions” when no conflicting license URL is present
+- Rights text exactly "public domain" or "no known copyright restrictions" when no conflicting license URL is present
 
 A saved clip is copied onto the device. The pad stores the license name, license URL, creator, and an attribution line, and More lists those attributions. CC BY and CC BY-SA still require that attribution to stay with the sound.
 
